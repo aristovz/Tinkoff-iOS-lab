@@ -10,16 +10,25 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var fromCurrencyLabel: UILabel!
+    @IBOutlet weak var toCurrencyLabel: UILabel!
+    
+    @IBOutlet weak var fromValueField: UITextField!
+    @IBOutlet weak var toValueLabel: UILabel!
+    
+    @IBOutlet weak var currentRateLabel: UILabel!
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func changeCurrencyButtonAction(_ sender: UIButton) {
+        
     }
-
-
+    
+    
 }
 
