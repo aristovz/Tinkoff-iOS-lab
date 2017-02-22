@@ -57,22 +57,47 @@ class ViewController: UIViewController, UITextFieldDelegate {
         toPickerView.showsSelectionIndicator = true
         toCurrencyField.inputView = toPickerView
         toCurrencyField.inputAccessoryView = toolBar
-        
-        API.getListOfCurrency { (value, error) in
-            if let currentError = error {
-                print(currentError)
-            } else {
-                self.currencies = value
-                
-                DispatchQueue.main.async(execute: {
-                    if self.currencies.count > 1 {
-                        self.fromPickerView.reloadAllComponents()
-                        self.toPickerView.reloadAllComponents()
-                        
-                        self.pickerView(self.fromPickerView, didSelectRow: 0, inComponent: 0)
-                        self.pickerView(self.toPickerView, didSelectRow: 0, inComponent: 0)
-                    }
-                })
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        getListOfCurrency()
+    }
+    
+    func getListOfCurrency() {
+        activityIndicator.startAnimating()
+        currentRateLabel.isHidden = true
+        if !Support.isInternetAvailable() {
+            let alert = UIAlertController(title: "Internet not available", message: "Check your internet connection and try again", preferredStyle: .alert)
+            
+            // Replace UIAlertActionStyle.Default by UIAlertActionStyle.default
+            let okAction = UIAlertAction(title: "Try again", style: UIAlertActionStyle.default) {
+                (result : UIAlertAction) -> Void in
+                self.getListOfCurrency()
+            }
+            
+            alert.addAction(okAction)
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            API.getListOfCurrency { (value, error) in
+                if let currentError = error {
+                    print(currentError)
+                } else {
+                    self.currencies = value
+                    
+                    self.activityIndicator.stopAnimating()
+                    self.currentRateLabel.isHidden = false
+                    DispatchQueue.main.async(execute: {
+                        if self.currencies.count > 1 {
+                            self.fromPickerView.reloadAllComponents()
+                            self.toPickerView.reloadAllComponents()
+                            
+                            self.pickerView(self.fromPickerView, didSelectRow: 0, inComponent: 0)
+                            self.pickerView(self.toPickerView, didSelectRow: 0, inComponent: 0)
+                        }
+                    })
+                }
             }
         }
     }
